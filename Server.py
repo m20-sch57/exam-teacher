@@ -51,7 +51,7 @@ def get_question(group_name, exam_name, question_number):
         return {}
 
 
-def get_question_protected(group_name, exam_name, question_number):
+def get_details(group_name, exam_name, question_number):
     directory = os.path.join('groups', group_name, 'exams', exam_name, str(question_number))
     question_type = open(os.path.join(directory, 'type'), encoding=encoding).read()
     if question_type == 'Тест':
@@ -75,16 +75,16 @@ def short_checker(answer, correct):
 
 def check(group_name, user_name, exam_name, question_number, answer):
     question = get_question(group_name, exam_name, question_number)
-    question_protected = get_question_protected(group_name, exam_name, question_number)
+    details = get_details(group_name, exam_name, question_number)
     if question['type'] == 'Тест':
-        return {'score': test_checker(answer, question_protected['correct']),
+        return {'score': test_checker(answer, details['correct']),
                 'maximum': 1}
     elif question['type'] == 'Короткий ответ':
-        return {'score': short_checker(answer, question_protected['correct']),
+        return {'score': short_checker(answer, details['correct']),
                 'maximum': 1}
     elif question['type'] == 'Развёрнутый ответ':
         return {'score': -1,
-                'maximum': question_protected['maximum']}
+                'maximum': details['maximum']}
     else:
         return {}
 
@@ -97,6 +97,6 @@ server.register_function(search_user)
 server.register_function(list_of_exams)
 server.register_function(number_of_questions)
 server.register_function(get_question)
-server.register_function(get_question_protected)
+server.register_function(get_details)
 server.register_function(check)
 server.serve_forever()
