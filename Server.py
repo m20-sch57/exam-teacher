@@ -94,9 +94,10 @@ def get_question(group_name, exam_name, question_number):
     """
     question_item = Item(os.path.join('groups', group_name, 'exams', exam_name, str(question_number)))
     if question_item.get_attr('type') == 'Тест':
+        variants = question_item.get_attr('variants').split('\n')
         return {'statement': question_item.get_attr('statement'),
-                'variants': question_item.get_attr('variants').split('\n'),
-                'correct': int(question_item.get_attr('correct')),
+                'variants': variants,
+                'correct': variants[int(question_item.get_attr('correct')) - 1],
                 'time': int(question_item.get_attr('time')),
                 'type': question_item.get_attr('type'),
                 'max': 1}
